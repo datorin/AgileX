@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public static int coins;
+
+    public bool isHole = false;
+    public bool isFire = false;
+    public bool isCollision = false;
+    public Vector3 collDirection;
+
     Animator anim;
     Rigidbody2D rb;
     Vector2 move;
@@ -14,8 +21,13 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        coins = 0;
+    }
+
+    // Use this for initialization
+    void Start () {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         belt = this.gameObject.transform.GetChild(0);
@@ -23,10 +35,28 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        move = new Vector2 (
-            Input.GetAxisRaw("Horizontal"),
-            Input.GetAxisRaw("Vertical")
-        );
+        if(!isHole && !isCollision && !isFire)
+        {
+            move = new Vector2(
+                Input.GetAxisRaw("Horizontal"),
+                Input.GetAxisRaw("Vertical")
+            );
+        }else if (isHole)
+        {
+            anim.SetTrigger("isHole");
+            StartCoroutine(waitHole(2, collDirection));
+        }else if (isFire)
+        {
+            anim.SetTrigger("isCollision");
+            StartCoroutine(waitFire(.25f, collDirection));
+            isFire = false;
+
+        } else if (isCollision)
+        {
+            anim.SetTrigger("isCollision");
+            StartCoroutine(waitCollision(.25f, collDirection));
+            isCollision = false;
+        }
 
         if (move != Vector2.zero)
         {
@@ -49,5 +79,36 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + move * speed * Time.deltaTime);
+    }
+
+    private IEnumerator waitHole(float waitTime, Vector3 collDirection)
+    {
+        yield return new WaitForSeconds(waitTime);
+        this.transform.position = new Vector3(0, 0, 0);
+        isHole = false;
+    }
+
+    private IEnumerator waitCollision(float waitTime, Vector3 collDirection)
+    {
+        yield return new WaitForSeconds(waitTime);
+        this.transform.position = this.transform.position + collDirection.normalized;
+        isCollision = false;
+    }
+
+    private IEnumerator waitFire(float waitTime, Vector3 collDirection)
+    {
+        yield return new WaitForSeconds(waitTime);
+        this.transform.position = this.transform.position + collDirection.normalized;
+        isFire = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Coin")
+        {
+            coins++;
+            Destroy(collision.gameObject);
+        }
+        Debug.Log("Coins: " + coins);
     }
 }
