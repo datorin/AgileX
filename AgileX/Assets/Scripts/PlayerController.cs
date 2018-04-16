@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -10,6 +12,12 @@ public class PlayerController : MonoBehaviour {
     public bool isFire = false;
     public bool isCollision = false;
     public Vector3 collDirection;
+    public int totalSeconds = 60;
+
+    private Text countDownText;
+    private GameObject endTextObject;
+
+    private TimeSpan countdown;
 
     Animator anim;
     Rigidbody2D rb;
@@ -21,6 +29,20 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
 
+    public double Countdown
+    {
+        get
+        {
+            return countdown.TotalSeconds;
+        }
+
+        set
+        {
+            countdown = TimeSpan.FromSeconds(value);
+            countDownText.text = string.Format("{0:D2}:{1:D2}", countdown.Minutes, countdown.Seconds);
+        }
+    }
+
     private void Awake()
     {
         coins = 0;
@@ -28,6 +50,13 @@ public class PlayerController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        countDownText = GameObject.Find("CountDownText").GetComponent<Text>();
+        endTextObject = GameObject.Find("EndText");
+        endTextObject.SetActive(false);
+        endTextObject.GetComponent<Text>().enabled = false;
+        countdown = TimeSpan.FromSeconds(totalSeconds);
+
+
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         belt = this.gameObject.transform.GetChild(0);
@@ -35,6 +64,14 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Countdown > 0)
+        {
+            Countdown -= Time.deltaTime;
+        }
+        else if (!endTextObject.activeSelf)
+        {
+            GameOver();
+        }
         if(!isHole && !isCollision && !isFire)
         {
             move = new Vector2(
@@ -79,6 +116,15 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + move * speed * Time.deltaTime);
+    }
+
+    private void GameOver()
+    {
+        endTextObject.SetActive(true);
+        var endText = endTextObject.GetComponent<Text>();
+        endText.text = "Game Over :(";
+        endText.enabled = true;
+        Destroy(gameObject);
     }
 
     private IEnumerator waitHole(float waitTime, Vector3 collDirection)
