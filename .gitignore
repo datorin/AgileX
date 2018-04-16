@@ -1,0 +1,45 @@
+# =============== #
+# Unity generated #
+# =============== #
+[Tt]emp/
+[Oo]bj/
+[Bb]uild
+/AgileX/[Bb]uilds/
+/AgileX/[Ll]ibrary/
+sysinfo.txt
+*.stackdump
+/AgileX/Assets/AssetStoreTools*
+*.apk
+*.unitypackage
+ 
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+[Ee]xported[Oo]bj/
+.vs/
+/AgileX/*.userprefs
+/AgileX/*.csproj
+/AgileX/*.pidb
+*.pidb.meta
+/AgileX/*.suo
+/AgileX/*.sln*
+/AgileX/*.user
+/AgileX/*.unityproj
+/AgileX/*.booproj
+.consulo/
+/AgileX/*.tmp
+/AgileX/*.svd
+ 
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store*
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini
+Corridor/Library/ShaderCache/
+Corridor/Library/metadata/
