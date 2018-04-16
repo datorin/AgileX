@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour {
     {
         endTextObject.SetActive(true);
         var endText = endTextObject.GetComponent<Text>();
-        endText.text = Points >= 70 ? "Game Over :(" : "You Win! :D";
+        endText.text = Points < pointsToWin ? "Game Over :(" : "You Win! :D";
         endText.enabled = true;
         Destroy(gameObject);
     }
