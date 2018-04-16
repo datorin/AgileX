@@ -6,18 +6,24 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-    public static int coins;
-
     public bool isHole = false;
     public bool isFire = false;
     public bool isCollision = false;
     public Vector3 collDirection;
+    public uint initialPoints = 0;
+    public uint pointsToWin = 70;
     public int totalSeconds = 60;
+    public int coinsEachRound = 2;
+    public float secondsBetweenRounds = 5.0f;
 
     private Text countDownText;
     private GameObject endTextObject;
-
     private TimeSpan countdown;
+
+    private Text pointsText;
+    private uint points = 0;
+
+    private GameObject[] coinObjects;
 
     Animator anim;
     Rigidbody2D rb;
@@ -43,19 +49,42 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void Awake()
+    public uint Points
     {
-        coins = 0;
+        get
+        {
+            return points;
+        }
+
+        set
+        {
+            points = value;
+            pointsText.text = string.Format("{0} points", points);
+        }
     }
 
     // Use this for initialization
     void Start () {
+        pointsText = GameObject.Find("PointsText").GetComponent<Text>();
         countDownText = GameObject.Find("CountDownText").GetComponent<Text>();
         endTextObject = GameObject.Find("EndText");
+
+        Points = initialPoints;
+
+        coinObjects = GameObject.FindGameObjectsWithTag("Coin");
+        if (coinsEachRound > coinObjects.Length)
+        {
+            coinsEachRound = coinObjects.Length;
+        }
+        foreach(var coin in coinObjects)
+        {
+            coin.SetActive(false);
+        }
+        InvokeRepeating("ActivateCoins", 2.0f, secondsBetweenRounds);
+
         endTextObject.SetActive(false);
         endTextObject.GetComponent<Text>().enabled = false;
         countdown = TimeSpan.FromSeconds(totalSeconds);
-
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -118,11 +147,30 @@ public class PlayerController : MonoBehaviour {
         rb.MovePosition(rb.position + move * speed * Time.deltaTime);
     }
 
+    void ActivateCoins()
+    {
+        for(int i = 0; i < coinsEachRound; i++)
+        {
+            int index = UnityEngine.Random.Range(0, coinObjects.Length - 1);
+            int checks = 0;
+            while (coinObjects[index].activeSelf)
+            {
+                index++;
+                checks++;
+                if (checks >= coinObjects.Length)
+                {
+                    return;
+                }
+            }
+            coinObjects[index].SetActive(true);
+        }
+    }
+
     private void GameOver()
     {
         endTextObject.SetActive(true);
         var endText = endTextObject.GetComponent<Text>();
-        endText.text = "Game Over :(";
+        endText.text = Points >= 70 ? "Game Over :(" : "You Win! :D";
         endText.enabled = true;
         Destroy(gameObject);
     }
@@ -150,11 +198,18 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Coin")
+        string collisionTag = collision.gameObject.tag;
+        switch(collisionTag)
         {
-            coins++;
-            Destroy(collision.gameObject);
+            case "Coin":
+                Points += 5;
+                collision.gameObject.SetActive(false);
+                break;
+            case "Hole":
+            case "Fire":
+                Points -= 10;
+                break;
         }
-        Debug.Log("Coins: " + coins);
+        Debug.Log("Coins: " + Points);
     }
 }
