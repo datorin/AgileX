@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
     public bool isFire = false;
     public bool isCollision = false;
     public Vector3 collDirection;
-    public uint initialPoints = 0;
+    public int initialPoints = 0;
     public uint pointsToWin = 70;
     public int totalSeconds = 60;
     public int coinsEachRound = 2;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour {
     private TimeSpan countdown;
 
     private Text pointsText;
-    private uint points = 0;
+    private int points = 0;
 
     private GameObject[] coinObjects;
 
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public uint Points
+    public int Points
     {
         get
         {
@@ -58,7 +58,14 @@ public class PlayerController : MonoBehaviour {
 
         set
         {
-            points = value;
+            if(value <= 0)
+            {
+                points = 0;
+            }else
+            {
+                points = value;
+            }
+            
             pointsText.text = string.Format("{0} points", points);
         }
     }
