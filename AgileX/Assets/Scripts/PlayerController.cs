@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour {
     public int coinsEachRound = 2;
     public float secondsBetweenRounds = 5.0f;
 
+    private float porcentageMonedas5 = 0.5f;
+    private float porcentageMonedas15 = 0.15f;
+
     private Text countDownText;
     private GameObject endTextObject;
     private TimeSpan countdown;
@@ -170,6 +173,14 @@ public class PlayerController : MonoBehaviour {
                 }
             }
             coinObjects[index].SetActive(true);
+            float random = UnityEngine.Random.value;
+            if (random < porcentageMonedas5 && random > porcentageMonedas15 )
+            {
+                coinObjects[index].tag = "Coin10";
+            }else if (random <= porcentageMonedas15)
+            {
+                coinObjects[index].tag = "Coin15";
+            }
         }
     }
 
@@ -210,6 +221,14 @@ public class PlayerController : MonoBehaviour {
         {
             case "Coin":
                 Points += 5;
+                collision.gameObject.SetActive(false);
+                break;
+            case "Coin10":
+                Points += 10;
+                collision.gameObject.SetActive(false);
+                break;
+            case "Coin15":
+                Points += 15;
                 collision.gameObject.SetActive(false);
                 break;
             case "Hole":
