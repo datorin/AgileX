@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
 
+    bool invulnerable = false;
+
     public double Countdown
     {
         get
@@ -121,13 +123,11 @@ public class PlayerController : MonoBehaviour {
         }else if (isFire)
         {
             anim.SetTrigger("isCollision");
-            StartCoroutine(waitFire(.25f, collDirection));
             isFire = false;
 
         } else if (isCollision)
         {
             anim.SetTrigger("isCollision");
-            StartCoroutine(waitCollision(.25f, collDirection));
             isCollision = false;
         }
 
@@ -146,6 +146,11 @@ public class PlayerController : MonoBehaviour {
         {
             GameObject projectileClone = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
             projectileClone.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+        }
+
+        if (invulnerable)
+        {
+            StartCoroutine(waitInvulnerable(1));
         }
 	}
 
@@ -189,18 +194,10 @@ public class PlayerController : MonoBehaviour {
         isHole = false;
     }
 
-    private IEnumerator waitCollision(float waitTime, Vector3 collDirection)
+    private IEnumerator waitInvulnerable(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        this.transform.position = this.transform.position + collDirection.normalized;
-        isCollision = false;
-    }
-
-    private IEnumerator waitFire(float waitTime, Vector3 collDirection)
-    {
-        yield return new WaitForSeconds(waitTime);
-        this.transform.position = this.transform.position + collDirection.normalized;
-        isFire = false;
+        invulnerable = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -213,8 +210,18 @@ public class PlayerController : MonoBehaviour {
                 collision.gameObject.SetActive(false);
                 break;
             case "Hole":
+                if (!invulnerable)
+                {
+                    Points -= 10;
+                }
+                invulnerable = true;
+                break;
             case "Fire":
-                Points -= 10;
+                if (!invulnerable)
+                {
+                    Points -= 10;
+                }
+                invulnerable = true;
                 break;
         }
         Debug.Log("Coins: " + Points);
