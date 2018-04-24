@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     public float secondsBetweenRounds = 5.0f;
 
     private float porcentageMonedas5 = 0.5f;
+    private float porcentageMonedas10 = 0.35f;
     private float porcentageMonedas15 = 0.15f;
 
     private Text countDownText;
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] GameObject projectile;
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
+    
 
     public double Countdown
     {
@@ -172,15 +174,23 @@ public class PlayerController : MonoBehaviour {
                     return;
                 }
             }
-            coinObjects[index].SetActive(true);
-            float random = UnityEngine.Random.value;
-            if (random < porcentageMonedas5 && random > porcentageMonedas15 )
+            float random = UnityEngine.Random.Range(1, 100);
+            float bronzeBound = porcentageMonedas5 * 100;
+            float silverBound = bronzeBound + (porcentageMonedas10 * 100);
+            float goldBound = silverBound + (porcentageMonedas15 * 100);
+            if (1 <= random && random < bronzeBound)
             {
-                coinObjects[index].tag = "Coin10";
-            }else if (random <= porcentageMonedas15)
-            {
-                coinObjects[index].tag = "Coin15";
+                coinObjects[index].tag = "CoinBronze";
             }
+            else if (bronzeBound <= random && random < silverBound)
+            {
+                coinObjects[index].tag = "CoinSilver";
+            }
+            else if (silverBound <= random && random <= goldBound)
+            {
+                coinObjects[index].tag = "CoinGold";
+            }
+            coinObjects[index].SetActive(true);
         }
     }
 
@@ -219,15 +229,15 @@ public class PlayerController : MonoBehaviour {
         string collisionTag = collision.gameObject.tag;
         switch(collisionTag)
         {
-            case "Coin":
+            case "CoinBronze":
                 Points += 5;
                 collision.gameObject.SetActive(false);
                 break;
-            case "Coin10":
+            case "CoinSilver":
                 Points += 10;
                 collision.gameObject.SetActive(false);
                 break;
-            case "Coin15":
+            case "CoinGold":
                 Points += 15;
                 collision.gameObject.SetActive(false);
                 break;
