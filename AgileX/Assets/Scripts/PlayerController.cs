@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
     public bool isFire = false;
     public bool isCollision = false;
     public Vector3 collDirection;
-    public int initialPoints = 0;
+    public int initialPoints = 25;
     public uint pointsToWin = 70;
     public int totalSeconds = 60;
     public int coinsEachRound = 2;
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
     private TimeSpan countdown;
 
     private Text pointsText;
-    private int points = 0;
+    private int points;
 
     private GameObject[] coinObjects;
 
@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour {
         {
             if(value <= 0)
             {
+                GameOver();
                 points = 0;
             }else
             {
