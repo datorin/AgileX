@@ -174,7 +174,28 @@ public class PlayerController : MonoBehaviour {
                     return;
                 }
             }
+            int type = UnityEngine.Random.Range(0, 3);
             coinObjects[index].SetActive(true);
+            switch(type) {
+                case 0:
+                    coinObjects[index].tag = "CoinBronze";
+                    coinObjects[index].GetComponent<Animator>().SetBool("isBronce",true);
+                    coinObjects[index].GetComponent<Animator>().SetBool("isSilver",false);
+                    coinObjects[index].GetComponent<Animator>().SetBool("isGold",false);
+                    break;
+                case 1:
+                    coinObjects[index].tag = "CoinSilver";
+                    coinObjects[index].GetComponent<Animator>().SetBool("isBronce",false);
+                    coinObjects[index].GetComponent<Animator>().SetBool("isSilver",true);
+                    coinObjects[index].GetComponent<Animator>().SetBool("isGold",false);
+                    break;
+                case 2:
+                    coinObjects[index].tag = "CoinGold";
+                    coinObjects[index].GetComponent<Animator>().SetBool("isBronce",false);
+                    coinObjects[index].GetComponent<Animator>().SetBool("isSilver",false);
+                    coinObjects[index].GetComponent<Animator>().SetBool("isGold",true);
+                    break;
+            }
         }
     }
 
@@ -205,8 +226,16 @@ public class PlayerController : MonoBehaviour {
         string collisionTag = collision.gameObject.tag;
         switch(collisionTag)
         {
-            case "Coin":
+            case "CoinBronze":
                 Points += 5;
+                collision.gameObject.SetActive(false);
+                break;
+            case "CoinSilver":
+                Points += 10;
+                collision.gameObject.SetActive(false);
+                break;
+            case "CoinGold":
+                Points += 15;
                 collision.gameObject.SetActive(false);
                 break;
             case "Hole":
