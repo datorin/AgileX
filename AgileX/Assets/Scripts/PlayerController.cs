@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float force = 20;
     
 
+    bool invulnerable = false;
+
     public double Countdown
     {
         get
@@ -126,13 +128,11 @@ public class PlayerController : MonoBehaviour {
         }else if (isFire)
         {
             anim.SetTrigger("isCollision");
-            StartCoroutine(waitFire(.25f, collDirection));
             isFire = false;
 
         } else if (isCollision)
         {
             anim.SetTrigger("isCollision");
-            StartCoroutine(waitCollision(.25f, collDirection));
             isCollision = false;
         }
 
@@ -151,6 +151,11 @@ public class PlayerController : MonoBehaviour {
         {
             GameObject projectileClone = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
             projectileClone.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+        }
+
+        if (invulnerable)
+        {
+            StartCoroutine(waitInvulnerable(1));
         }
 	}
 
@@ -174,23 +179,35 @@ public class PlayerController : MonoBehaviour {
                     return;
                 }
             }
+
             float random = UnityEngine.Random.Range(1, 100);
             float bronzeBound = porcentageMonedas5 * 100;
             float silverBound = bronzeBound + (porcentageMonedas10 * 100);
             float goldBound = silverBound + (porcentageMonedas15 * 100);
+
+            coinObjects[index].SetActive(true);
             if (1 <= random && random < bronzeBound)
             {
                 coinObjects[index].tag = "CoinBronze";
+                coinObjects[index].GetComponent<Animator>().SetBool("isBronce", true);
+                coinObjects[index].GetComponent<Animator>().SetBool("isSilver", false);
+                coinObjects[index].GetComponent<Animator>().SetBool("isGold", false);
             }
             else if (bronzeBound <= random && random < silverBound)
             {
                 coinObjects[index].tag = "CoinSilver";
+                coinObjects[index].GetComponent<Animator>().SetBool("isBronce", false);
+                coinObjects[index].GetComponent<Animator>().SetBool("isSilver", true);
+                coinObjects[index].GetComponent<Animator>().SetBool("isGold", false);
             }
             else if (silverBound <= random && random <= goldBound)
             {
                 coinObjects[index].tag = "CoinGold";
+                coinObjects[index].GetComponent<Animator>().SetBool("isBronce", false);
+                coinObjects[index].GetComponent<Animator>().SetBool("isSilver", false);
+                coinObjects[index].GetComponent<Animator>().SetBool("isGold", true);
             }
-            coinObjects[index].SetActive(true);
+            
         }
     }
 
@@ -210,18 +227,10 @@ public class PlayerController : MonoBehaviour {
         isHole = false;
     }
 
-    private IEnumerator waitCollision(float waitTime, Vector3 collDirection)
+    private IEnumerator waitInvulnerable(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        this.transform.position = this.transform.position + collDirection.normalized;
-        isCollision = false;
-    }
-
-    private IEnumerator waitFire(float waitTime, Vector3 collDirection)
-    {
-        yield return new WaitForSeconds(waitTime);
-        this.transform.position = this.transform.position + collDirection.normalized;
-        isFire = false;
+        invulnerable = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -242,8 +251,18 @@ public class PlayerController : MonoBehaviour {
                 collision.gameObject.SetActive(false);
                 break;
             case "Hole":
+                if (!invulnerable)
+                {
+                    Points -= 10;
+                }
+                invulnerable = true;
+                break;
             case "Fire":
-                Points -= 10;
+                if (!invulnerable)
+                {
+                    Points -= 10;
+                }
+                invulnerable = true;
                 break;
         }
         Debug.Log("Coins: " + Points);
