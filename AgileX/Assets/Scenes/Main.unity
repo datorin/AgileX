@@ -1840,6 +1840,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114339127071268132, guid: 8fc3627c769ccf94d8aea452899c17ee,
+        type: 2}
+      propertyPath: initialPoints
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fc3627c769ccf94d8aea452899c17ee, type: 2}
   m_IsPrefabParent: 0
@@ -2603,15 +2608,15 @@ RectTransform:
   m_GameObject: {fileID: 1420265131}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.28726345, y: 0.2872636, z: 0.2872636}
+  m_LocalScale: {x: 0.2891043, y: 0.28910446, z: 0.28910446}
   m_Children: []
   m_Father: {fileID: 172891005}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1, y: -34}
-  m_SizeDelta: {x: -720.01, y: 153.16}
+  m_AnchoredPosition: {x: 1.7, y: -28.199997}
+  m_SizeDelta: {x: -483.1, y: 175.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1420265133
 MonoBehaviour:
@@ -2639,7 +2644,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
