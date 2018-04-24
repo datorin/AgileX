@@ -8,8 +8,9 @@ TagManager:
   - Fire
   - Collision
   - Coin
-  - Coin10
-  - Coin15
+  - CoinGold
+  - CoinSilver
+  - CoinBronze
   layers:
   - Default
   - TransparentFX
