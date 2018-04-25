@@ -72,6 +72,10 @@ public class PlayerController : MonoBehaviour {
             }else
             {
                 points = value;
+                if(points >= pointsToWin)
+                {
+                    GameOver();
+                }
             }
             
             pointsText.text = string.Format("{0} points", points);
