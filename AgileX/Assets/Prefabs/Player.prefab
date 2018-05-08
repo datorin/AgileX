@@ -11,16 +11,15 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1859345068643874}
   m_IsPrefabParent: 1
---- !u!1 &1552451824226994
+--- !u!1 &1072988434044984
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4783638204844630}
-  - component: {fileID: 61559010062715602}
-  - component: {fileID: 114602782919816762}
+  - component: {fileID: 4634036481890042}
+  - component: {fileID: 61092673524572946}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -58,7 +57,7 @@ GameObject:
   - component: {fileID: 114339127071268132}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,9 +73,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4693583341050572}
-  - {fileID: 4783638204844630}
+  - {fileID: 4634036481890042}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4634036481890042
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1072988434044984}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4153683867468042}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4693583341050572
 Transform:
@@ -90,19 +102,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4153683867468042}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4783638204844630
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1552451824226994}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4153683867468042}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &50511701479704882
 Rigidbody2D:
@@ -124,19 +123,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &61559010062715602
+--- !u!61 &61092673524572946
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1552451824226994}
+  m_GameObject: {fileID: 1072988434044984}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.2}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -147,7 +146,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.25, y: 1.5}
+  m_Size: {x: 0.6, y: 0.5}
   m_EdgeRadius: 0
 --- !u!61 &61905612986196766
 BoxCollider2D:
@@ -172,7 +171,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.7}
+  m_Size: {x: 0.6, y: 0.5}
   m_EdgeRadius: 0
 --- !u!95 &95512238499480328
 Animator:
@@ -202,24 +201,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57a9de2e91a69de429ca2a8855e2d40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHole: 0
-  isFire: 0
-  isCollision: 0
-  collDirection: {x: 0, y: 0, z: 0}
+  initialPoints: 25
+  pointsToWin: 70
+  totalSeconds: 60
+  coinsEachRound: 2
+  secondsBetweenRounds: 5
+  porcentageMonedas5: 0.5
+  porcentageMonedas10: 0.35
+  porcentageMonedas15: 0.15
   projectile: {fileID: 1446425448821228, guid: dd358d9d3d6d44243aa7022837c4840e, type: 2}
   speed: 5
   force: 10
---- !u!114 &114602782919816762
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1552451824226994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec322c9b02a55f949984c127b0b90f86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &212736700368970632
 SpriteRenderer:
   m_ObjectHideFlags: 1

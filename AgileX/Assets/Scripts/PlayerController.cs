@@ -6,19 +6,20 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-    public bool isHole = false;
-    public bool isFire = false;
-    public bool isCollision = false;
-    public Vector3 collDirection;
-    public int initialPoints = 25;
-    public uint pointsToWin = 70;
-    public int totalSeconds = 60;
-    public int coinsEachRound = 2;
-    public float secondsBetweenRounds = 5.0f;
+    private bool isHole = false;
+    private bool isFalling = false;
+    private bool isFire = false;
+    private bool isCollision = false;
 
-    private float porcentageMonedas5 = 0.5f;
-    private float porcentageMonedas10 = 0.35f;
-    private float porcentageMonedas15 = 0.15f;
+    [SerializeField] public int initialPoints = 25;
+    [SerializeField] public uint pointsToWin = 70;
+    [SerializeField] public int totalSeconds = 60;
+    [SerializeField] public int coinsEachRound = 2;
+    [SerializeField] public float secondsBetweenRounds = 5.0f;
+
+    [SerializeField] private float porcentageMonedas5 = 0.5f;
+    [SerializeField] private float porcentageMonedas10 = 0.35f;
+    [SerializeField] private float porcentageMonedas15 = 0.15f;
 
     private Text countDownText;
     private GameObject endTextObject;
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour {
     Vector2 move;
     Transform belt;
     Vector2 direction;
+    Vector3 holePos;
 
     [SerializeField] GameObject projectile;
     [SerializeField] float speed = 5;
@@ -120,22 +122,31 @@ public class PlayerController : MonoBehaviour {
         {
             GameOver();
         }
-        if(!isHole && !isCollision && !isFire)
-        {
-            move = new Vector2(
-                Input.GetAxisRaw("Horizontal"),
-                Input.GetAxisRaw("Vertical")
-            );
-        }else if (isHole)
+
+        move = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+
+
+        if (isHole)
         {
             anim.SetTrigger("isHole");
-            StartCoroutine(waitHole(2, collDirection));
-        }else if (isFire)
-        {
-            anim.SetTrigger("isCollision");
-            isFire = false;
+            isHole = false;
+            isFalling = true;
+            StartCoroutine(waitHole(2));
+        }
 
-        } else if (isCollision)
+        if (isFalling)
+        {
+            transform.position = holePos;
+            move = Vector2.zero;
+        }
+
+        if (isFire)
+        {
+            anim.SetTrigger("isFire");
+            isFire = false;
+        }
+
+        if (isCollision)
         {
             anim.SetTrigger("isCollision");
             isCollision = false;
@@ -225,11 +236,11 @@ public class PlayerController : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    private IEnumerator waitHole(float waitTime, Vector3 collDirection)
+    private IEnumerator waitHole(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
+        isFalling = false;
         this.transform.position = new Vector3(0, 0, 0);
-        isHole = false;
     }
 
     private IEnumerator waitInvulnerable(float waitTime)
@@ -259,6 +270,8 @@ public class PlayerController : MonoBehaviour {
                 if (!invulnerable)
                 {
                     Points -= 10;
+                    isHole = true;
+                    holePos = collision.gameObject.transform.position + new Vector3(-1.5f,-0.5f,0);
                 }
                 invulnerable = true;
                 break;
@@ -266,10 +279,25 @@ public class PlayerController : MonoBehaviour {
                 if (!invulnerable)
                 {
                     Points -= 10;
+                    isFire = true;
                 }
                 invulnerable = true;
                 break;
+            case "Collision":
+                if (!invulnerable)
+                {
+                    isCollision = true;
+                }
+                break;
+            case "Enemy":
+                if (!invulnerable)
+                {
+                    Points -= 10;
+                    isFire = true;
+                }
+                invulnerable = true;
+                break;
+
         }
-        Debug.Log("Coins: " + Points);
     }
 }

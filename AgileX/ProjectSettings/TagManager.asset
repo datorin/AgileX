@@ -11,6 +11,8 @@ TagManager:
   - CoinGold
   - CoinSilver
   - CoinBronze
+  - Enemy
+  - PlayerProjectile
   layers:
   - Default
   - TransparentFX
