@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] public int totalSeconds = 60;
     [SerializeField] public int coinsEachRound = 2;
     [SerializeField] public float secondsBetweenRounds = 5.0f;
+    public float energyDecreaseCoeficient = 1;
+    public int maxEnergy = 100;
 
     [SerializeField] private float porcentageMonedas5 = 0.5f;
     [SerializeField] private float porcentageMonedas10 = 0.35f;
@@ -27,6 +29,9 @@ public class PlayerController : MonoBehaviour {
 
     private Text pointsText;
     private int points;
+
+    private Slider energySlider;
+    private float energy;
 
     private GameObject[] coinObjects;
 
@@ -86,13 +91,40 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    public float Energy
+    {
+        get
+        {
+            return energy;
+        }
+
+        set
+        {
+            if (value <= 0)
+            {
+                GameOver();
+                energy = 0;
+            }
+            else
+            {
+                energy = value > maxEnergy ? maxEnergy : value;
+            }
+
+            energySlider.value = energy;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         pointsText = GameObject.Find("PointsText").GetComponent<Text>();
         countDownText = GameObject.Find("CountDownText").GetComponent<Text>();
         endTextObject = GameObject.Find("EndText");
+        energySlider = GameObject.Find("EnergySlider").GetComponent<Slider>();
+        energySlider.maxValue = maxEnergy;
+        energySlider.minValue = 0;
 
         Points = initialPoints;
+        Energy = maxEnergy;
 
         coinObjects = GameObject.FindGameObjectsWithTag("Coin");
         if (coinsEachRound > coinObjects.Length)
@@ -184,7 +216,9 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + move * speed * Time.deltaTime);
+        Vector2 moveVector = move * speed * Time.deltaTime;
+        Energy -= energyDecreaseCoeficient * moveVector.magnitude;
+        rb.MovePosition(rb.position + moveVector);
     }
 
     void ActivateCoins()
