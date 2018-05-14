@@ -15,6 +15,9 @@ TagManager:
   - PlayerProjectile
   - BatSpawner
   - TreeSpawner
+  - Heart
+  - Proj
+  - Energy
   layers:
   - Default
   - TransparentFX

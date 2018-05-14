@@ -51,6 +51,11 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float force = 20;
     [SerializeField] public int amunition = 5;
 
+    public List<GameObject> places;
+    public GameObject heart;
+    public GameObject energies;
+    public GameObject projectiles;
+
     public Text amunitionText;
 
     bool invulnerable = false;
@@ -169,6 +174,25 @@ public class PlayerController : MonoBehaviour {
 
         move = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
 
+        var random = UnityEngine.Random.Range(0, 500);
+
+        if(random == 4)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(heart, places[randomPlace].transform.position + new Vector3(1,0,0), Quaternion.identity);
+        }
+
+        if (random == 7)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(energies, places[randomPlace].transform.position - new Vector3(1, 0, 0), Quaternion.identity);
+        }
+
+        if (random == 11)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(projectiles, places[randomPlace].transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+        }
 
         if (isHole)
         {
@@ -368,7 +392,19 @@ public class PlayerController : MonoBehaviour {
                 }
                 invulnerable = true;
                 break;
-
+            case "Heart":
+                //Reducir daño
+                Destroy(collision.gameObject);
+                break;
+            case "Energy":
+                energy += 50;
+                Destroy(collision.gameObject);
+                break;
+            case "Proj":
+                amunition += 5;
+                amunitionText.text = "" + amunition;
+                Destroy(collision.gameObject);
+                break;
         }
     }
 }

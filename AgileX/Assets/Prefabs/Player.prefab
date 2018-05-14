@@ -164,7 +164,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.9375, y: 1.375}
+    oldSize: {x: 0.8125, y: 1.3125}
     newSize: {x: 0.9375, y: 1.375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -217,6 +217,21 @@ MonoBehaviour:
   speed: 5
   force: 10
   amunition: 5
+  places:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  heart: {fileID: 1827821894935210, guid: 53165cb5887a8e945a1fe222d046eec0, type: 2}
+  energies: {fileID: 1437553897054850, guid: 1bff7be828882314bb51603e5dc6eaef, type: 2}
+  projectiles: {fileID: 1999877553510680, guid: 79c99fc0bb660df4d8b60af67173623a,
+    type: 2}
   amunitionText: {fileID: 0}
 --- !u!212 &212736700368970632
 SpriteRenderer:
@@ -252,7 +267,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 185ccdc01b60b7349acb886fc2f247dd, type: 3}
+  m_Sprite: {fileID: 21300018, guid: ae7c2660fcf522c4c9d8c446539368c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
