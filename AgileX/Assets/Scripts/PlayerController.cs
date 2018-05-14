@@ -40,7 +40,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] GameObject projectile;
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
-    
+    [SerializeField] public int amunition = 5;
+
+    public Text amunitionText;
 
     bool invulnerable = false;
 
@@ -163,10 +165,15 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("isMoving", false);
         }
 
-        if(Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.X))
         {
-            GameObject projectileClone = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
-            projectileClone.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+            if (amunition > 0)
+            {
+                GameObject projectileClone = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
+                projectileClone.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+                amunition = amunition - 1;
+                amunitionText.text = ""+amunition;
+            }
         }
 
         if (invulnerable)

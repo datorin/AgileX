@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPoints: 25
-  pointsToWin: 70
+  pointsToWin: 125
   totalSeconds: 60
   coinsEachRound: 2
   secondsBetweenRounds: 5
@@ -212,6 +212,8 @@ MonoBehaviour:
   projectile: {fileID: 1446425448821228, guid: dd358d9d3d6d44243aa7022837c4840e, type: 2}
   speed: 5
   force: 10
+  amunition: 5
+  amunitionText: {fileID: 0}
 --- !u!212 &212736700368970632
 SpriteRenderer:
   m_ObjectHideFlags: 1
