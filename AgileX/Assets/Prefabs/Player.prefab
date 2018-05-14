@@ -205,7 +205,11 @@ MonoBehaviour:
   pointsToWin: 125
   totalSeconds: 60
   coinsEachRound: 2
+  batsEachRound: 1
+  treesEachRound: 1
   secondsBetweenRounds: 5
+  energyDecreaseCoeficient: 1
+  maxEnergy: 100
   porcentageMonedas5: 0.5
   porcentageMonedas10: 0.35
   porcentageMonedas15: 0.15

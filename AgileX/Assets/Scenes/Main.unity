@@ -7289,11 +7289,12 @@ Prefab:
       propertyPath: amunitionText
       value: 
       objectReference: {fileID: 40224928}
-    - target: {fileID: 114339127071268132, guid: 8fc3627c769ccf94d8aea452899c17ee,
+    - target: {fileID: 212736700368970632, guid: 8fc3627c769ccf94d8aea452899c17ee,
         type: 2}
-      propertyPath: batsEachRound
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300018, guid: ae7c2660fcf522c4c9d8c446539368c2,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fc3627c769ccf94d8aea452899c17ee, type: 2}
   m_IsPrefabParent: 0
