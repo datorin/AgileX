@@ -13,6 +13,8 @@ TagManager:
   - CoinBronze
   - Enemy
   - PlayerProjectile
+  - BatSpawner
+  - TreeSpawner
   layers:
   - Default
   - TransparentFX

@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] public uint pointsToWin = 70;
     [SerializeField] public int totalSeconds = 60;
     [SerializeField] public int coinsEachRound = 2;
+    public int batsEachRound = 1;
+    public int treesEachRound = 1;
     [SerializeField] public float secondsBetweenRounds = 5.0f;
     public float energyDecreaseCoeficient = 1;
     public int maxEnergy = 100;
@@ -34,6 +36,8 @@ public class PlayerController : MonoBehaviour {
     private float energy;
 
     private GameObject[] coinObjects;
+    private GameObject[] batSpawners;
+    private GameObject[] treeSpawners;
 
     Animator anim;
     Rigidbody2D rb;
@@ -137,6 +141,12 @@ public class PlayerController : MonoBehaviour {
         }
         InvokeRepeating("ActivateCoins", 2.0f, secondsBetweenRounds);
 
+        batSpawners = GameObject.FindGameObjectsWithTag("BatSpawner");
+        InvokeRepeating("SpawnBats", 2.0f, secondsBetweenRounds);
+
+        treeSpawners = GameObject.FindGameObjectsWithTag("TreeSpawner");
+        InvokeRepeating("SpawnTrees", 2.0f, secondsBetweenRounds);
+
         endTextObject.SetActive(false);
         endTextObject.GetComponent<Text>().enabled = false;
         countdown = TimeSpan.FromSeconds(totalSeconds);
@@ -225,7 +235,7 @@ public class PlayerController : MonoBehaviour {
     {
         for(int i = 0; i < coinsEachRound; i++)
         {
-            int index = UnityEngine.Random.Range(0, coinObjects.Length - 1);
+            int index = UnityEngine.Random.Range(0, coinObjects.Length);
             int checks = 0;
             while (coinObjects[index].activeSelf)
             {
@@ -265,6 +275,26 @@ public class PlayerController : MonoBehaviour {
                 coinObjects[index].GetComponent<Animator>().SetBool("isGold", true);
             }
             
+        }
+    }
+
+    void SpawnBats()
+    {
+        for (int i = 0; i < batsEachRound; i++)
+        {
+            int index = UnityEngine.Random.Range(0, batSpawners.Length);
+
+            batSpawners[index].GetComponent<BatSpawner>().SpawnBat(gameObject);
+        }
+    }
+
+    void SpawnTrees()
+    {
+        for (int i = 0; i < treesEachRound; i++)
+        {
+            int index = UnityEngine.Random.Range(0, treeSpawners.Length);
+
+            treeSpawners[index].GetComponent<TreeSpawner>().SpawnTree(gameObject);
         }
     }
 
