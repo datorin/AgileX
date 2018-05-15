@@ -20,8 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4702173497079522}
   - component: {fileID: 212895132050429950}
-  - component: {fileID: 95045006857224824}
   - component: {fileID: 61223591962696348}
+  - component: {fileID: 95223827641451346}
   m_Layer: 0
   m_Name: Projectiles
   m_TagString: Proj
@@ -67,7 +67,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!95 &95045006857224824
+--- !u!95 &95223827641451346
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -76,7 +76,7 @@ Animator:
   m_GameObject: {fileID: 1999877553510680}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7d6a93a2260403649863b264e8145fc5, type: 2}
+  m_Controller: {fileID: 9100000, guid: 77aea1380bc34a64e883414e2b418407, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
