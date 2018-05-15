@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] public float secondsBetweenRounds = 5.0f;
     public float energyDecreaseCoeficient = 1;
     public int maxEnergy = 100;
+    public int maxDamage = 100;
+    public int minDamage = 0;
 
     [SerializeField] private float porcentageMonedas5 = 0.5f;
     [SerializeField] private float porcentageMonedas10 = 0.35f;
@@ -31,6 +33,9 @@ public class PlayerController : MonoBehaviour {
 
     private Text pointsText;
     private int points;
+
+    private Slider damageSlider;
+    private float damage;
 
     private Slider energySlider;
     private float energy;
@@ -123,6 +128,29 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    public float Damage
+    {
+        get
+        {
+            return damage;
+        }
+
+        set
+        {
+            if (value >= 100)
+            {
+                GameOver();
+                damage = 100;
+            }
+            else
+            {
+                damage = value < minDamage ? minDamage : value;
+            }
+
+            damageSlider.value = damage;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         pointsText = GameObject.Find("PointsText").GetComponent<Text>();
@@ -131,9 +159,13 @@ public class PlayerController : MonoBehaviour {
         energySlider = GameObject.Find("EnergySlider").GetComponent<Slider>();
         energySlider.maxValue = maxEnergy;
         energySlider.minValue = 0;
+        damageSlider = GameObject.Find("DamageSlider").GetComponent<Slider>();
+        damageSlider.maxValue = maxDamage;
+        damageSlider.minValue = 0;
 
         Points = initialPoints;
         Energy = maxEnergy;
+        Damage =  minDamage;
 
         coinObjects = GameObject.FindGameObjectsWithTag("Coin");
         if (coinsEachRound > coinObjects.Length)
@@ -387,13 +419,13 @@ public class PlayerController : MonoBehaviour {
             case "Enemy":
                 if (!invulnerable)
                 {
-                    Points -= 10;
+                    Damage += 10;
                     isFire = true;
                 }
                 invulnerable = true;
                 break;
             case "Heart":
-                //Reducir daño
+                Damage -= 50;
                 Destroy(collision.gameObject);
                 break;
             case "Energy":
