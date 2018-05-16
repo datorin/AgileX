@@ -15,18 +15,18 @@ public class TreeSpawner : MonoBehaviour {
 		
 	}
 
-    public tree_controller SpawnTree(GameObject player)
+    public TreeController SpawnTree(GameObject player)
     {
         if (lastInstance == null || !lastInstance.activeSelf)
         {
             lastInstance = Instantiate(tree, transform.position, Quaternion.identity);
-            var script = lastInstance.GetComponent<tree_controller>();
+            var script = lastInstance.GetComponent<TreeController>();
             script.target = player;
             return script;
         }
         else
         {
-            return lastInstance.GetComponent<tree_controller>();
+            return lastInstance.GetComponent<TreeController>();
         }
         
     }

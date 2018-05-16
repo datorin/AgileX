@@ -14,9 +14,9 @@ public class BatSpawner : MonoBehaviour {
 		
 	}
 
-    public bat_controller SpawnBat(GameObject player)
+    public BatController SpawnBat(GameObject player)
     {
-        var script = Instantiate(bat, transform.position, Quaternion.identity).GetComponent<bat_controller>();
+        var script = Instantiate(bat, transform.position, Quaternion.identity).GetComponent<BatController>();
         script.target = player;
         return script;
     }

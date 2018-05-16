@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class tree_controller : MonoBehaviour
+public class TreeController : EnemyController
 {
     public GameObject projectile;
-    public GameObject target;
 
     private int force = 10;
 
@@ -14,14 +13,6 @@ public class tree_controller : MonoBehaviour
 
     bool isShooting = false;
     private double random = 4;
-
-    Animator anim;
-
-    // Use this for initialization
-    void Start()
-    {
-        anim = GetComponent<Animator>();
-    }
 
     // Update is called once per frame
     void Update()
@@ -37,7 +28,7 @@ public class tree_controller : MonoBehaviour
             {
                 angle -= 360;
             }
-            anim.SetFloat("Angle", angle);
+            animator.SetFloat("Angle", angle);
 
             if (isShooting)
             {
@@ -50,14 +41,6 @@ public class tree_controller : MonoBehaviour
             {
                 isShooting = true;
             }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("PlayerProjectile"))
-        {
-            Destroy(this.gameObject);
         }
     }
 }

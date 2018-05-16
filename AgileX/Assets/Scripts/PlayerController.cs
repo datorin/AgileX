@@ -11,25 +11,13 @@ public class PlayerController : MonoBehaviour {
     private bool isFire = false;
     private bool isCollision = false;
 
-    [SerializeField] public int initialPoints = 25;
-    [SerializeField] public uint pointsToWin = 70;
-    [SerializeField] public int totalSeconds = 60;
-    [SerializeField] public int coinsEachRound = 2;
-    public int batsEachRound = 1;
-    public int treesEachRound = 1;
-    [SerializeField] public float secondsBetweenRounds = 5.0f;
+    [SerializeField] private GameObject sceneObject;
+    private SceneController scene;
+
     public float energyDecreaseCoeficient = 1;
     public int maxEnergy = 100;
     public int maxDamage = 100;
     public int minDamage = 0;
-
-    [SerializeField] private float porcentageMonedas5 = 0.5f;
-    [SerializeField] private float porcentageMonedas10 = 0.35f;
-    [SerializeField] private float porcentageMonedas15 = 0.15f;
-
-    private Text countDownText;
-    private GameObject endTextObject;
-    private TimeSpan countdown;
 
     private Text pointsText;
     private int points;
@@ -39,10 +27,6 @@ public class PlayerController : MonoBehaviour {
 
     private Slider energySlider;
     private float energy;
-
-    private GameObject[] coinObjects;
-    private GameObject[] batSpawners;
-    private GameObject[] treeSpawners;
 
     Animator anim;
     Rigidbody2D rb;
@@ -65,20 +49,6 @@ public class PlayerController : MonoBehaviour {
 
     bool invulnerable = false;
 
-    public double Countdown
-    {
-        get
-        {
-            return countdown.TotalSeconds;
-        }
-
-        set
-        {
-            countdown = TimeSpan.FromSeconds(value);
-            countDownText.text = string.Format("{0:D2}:{1:D2}", countdown.Minutes, countdown.Seconds);
-        }
-    }
-
     public int Points
     {
         get
@@ -90,14 +60,14 @@ public class PlayerController : MonoBehaviour {
         {
             if(value <= 0)
             {
-                GameOver();
+                scene.GameOver(this);
                 points = 0;
             }else
             {
                 points = value;
-                if(points >= pointsToWin)
+                if(points >= scene.pointsToWin)
                 {
-                    GameOver();
+                    scene.GameOver(this);
                 }
             }
             
@@ -116,7 +86,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (value <= 0)
             {
-                GameOver();
+                scene.GameOver(this);
                 energy = 0;
             }
             else
@@ -139,7 +109,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (value >= 100)
             {
-                GameOver();
+                scene.GameOver(this);
                 damage = 100;
             }
             else
@@ -151,11 +121,14 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    void Awake()
+    {
+        scene = sceneObject.GetComponent<SceneController>();
+    }
+
     // Use this for initialization
     void Start () {
         pointsText = GameObject.Find("PointsText").GetComponent<Text>();
-        countDownText = GameObject.Find("CountDownText").GetComponent<Text>();
-        endTextObject = GameObject.Find("EndText");
         energySlider = GameObject.Find("EnergySlider").GetComponent<Slider>();
         energySlider.maxValue = maxEnergy;
         energySlider.minValue = 0;
@@ -163,30 +136,9 @@ public class PlayerController : MonoBehaviour {
         damageSlider.maxValue = maxDamage;
         damageSlider.minValue = 0;
 
-        Points = initialPoints;
+        Points = scene.initialPoints;
         Energy = maxEnergy;
         Damage =  minDamage;
-
-        coinObjects = GameObject.FindGameObjectsWithTag("Coin");
-        if (coinsEachRound > coinObjects.Length)
-        {
-            coinsEachRound = coinObjects.Length;
-        }
-        foreach(var coin in coinObjects)
-        {
-            coin.SetActive(false);
-        }
-        InvokeRepeating("ActivateCoins", 2.0f, secondsBetweenRounds);
-
-        batSpawners = GameObject.FindGameObjectsWithTag("BatSpawner");
-        InvokeRepeating("SpawnBats", 2.0f, secondsBetweenRounds);
-
-        treeSpawners = GameObject.FindGameObjectsWithTag("TreeSpawner");
-        InvokeRepeating("SpawnTrees", 2.0f, secondsBetweenRounds);
-
-        endTextObject.SetActive(false);
-        endTextObject.GetComponent<Text>().enabled = false;
-        countdown = TimeSpan.FromSeconds(totalSeconds);
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -195,14 +147,6 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Countdown > 0)
-        {
-            Countdown -= Time.deltaTime;
-        }
-        else if (!endTextObject.activeSelf)
-        {
-            GameOver();
-        }
 
         move = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
 
@@ -285,82 +229,6 @@ public class PlayerController : MonoBehaviour {
         Vector2 moveVector = move * speed * Time.deltaTime;
         Energy -= energyDecreaseCoeficient * moveVector.magnitude;
         rb.MovePosition(rb.position + moveVector);
-    }
-
-    void ActivateCoins()
-    {
-        for(int i = 0; i < coinsEachRound; i++)
-        {
-            int index = UnityEngine.Random.Range(0, coinObjects.Length);
-            int checks = 0;
-            while (coinObjects[index].activeSelf)
-            {
-                index++;
-                checks++;
-                if (checks >= coinObjects.Length)
-                {
-                    return;
-                }
-            }
-
-            float random = UnityEngine.Random.Range(1, 100);
-            float bronzeBound = porcentageMonedas5 * 100;
-            float silverBound = bronzeBound + (porcentageMonedas10 * 100);
-            float goldBound = silverBound + (porcentageMonedas15 * 100);
-
-            coinObjects[index].SetActive(true);
-            if (1 <= random && random < bronzeBound)
-            {
-                coinObjects[index].tag = "CoinBronze";
-                coinObjects[index].GetComponent<Animator>().SetBool("isBronce", true);
-                coinObjects[index].GetComponent<Animator>().SetBool("isSilver", false);
-                coinObjects[index].GetComponent<Animator>().SetBool("isGold", false);
-            }
-            else if (bronzeBound <= random && random < silverBound)
-            {
-                coinObjects[index].tag = "CoinSilver";
-                coinObjects[index].GetComponent<Animator>().SetBool("isBronce", false);
-                coinObjects[index].GetComponent<Animator>().SetBool("isSilver", true);
-                coinObjects[index].GetComponent<Animator>().SetBool("isGold", false);
-            }
-            else if (silverBound <= random && random <= goldBound)
-            {
-                coinObjects[index].tag = "CoinGold";
-                coinObjects[index].GetComponent<Animator>().SetBool("isBronce", false);
-                coinObjects[index].GetComponent<Animator>().SetBool("isSilver", false);
-                coinObjects[index].GetComponent<Animator>().SetBool("isGold", true);
-            }
-            
-        }
-    }
-
-    void SpawnBats()
-    {
-        for (int i = 0; i < batsEachRound; i++)
-        {
-            int index = UnityEngine.Random.Range(0, batSpawners.Length);
-
-            batSpawners[index].GetComponent<BatSpawner>().SpawnBat(gameObject);
-        }
-    }
-
-    void SpawnTrees()
-    {
-        for (int i = 0; i < treesEachRound; i++)
-        {
-            int index = UnityEngine.Random.Range(0, treeSpawners.Length);
-
-            treeSpawners[index].GetComponent<TreeSpawner>().SpawnTree(gameObject);
-        }
-    }
-
-    private void GameOver()
-    {
-        endTextObject.SetActive(true);
-        var endText = endTextObject.GetComponent<Text>();
-        endText.text = Points < pointsToWin ? "Game Over :(" : "You Win! :D";
-        endText.enabled = true;
-        Destroy(gameObject);
     }
 
     private IEnumerator waitHole(float waitTime)
