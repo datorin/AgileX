@@ -90,25 +90,18 @@ public class SceneController : MonoBehaviour {
             if (1 <= random && random < bronzeBound)
             {
                 coin.tag = "CoinBronze";
-                coin.GetComponent<Animator>().SetBool("isBronce", true);
-                coin.GetComponent<Animator>().SetBool("isSilver", false);
-                coin.GetComponent<Animator>().SetBool("isGold", false);
+                coin.GetComponent<Animator>().SetInteger("type", CoinType.BRONZE);
             }
             else if (bronzeBound <= random && random < silverBound)
             {
                 coin.tag = "CoinSilver";
-                coin.GetComponent<Animator>().SetBool("isBronce", false);
-                coin.GetComponent<Animator>().SetBool("isSilver", true);
-                coin.GetComponent<Animator>().SetBool("isGold", false);
+                coin.GetComponent<Animator>().SetInteger("type", CoinType.SILVER);
             }
             else if (silverBound <= random && random <= goldBound)
             {
                 coin.tag = "CoinGold";
-                coin.GetComponent<Animator>().SetBool("isBronce", false);
-                coin.GetComponent<Animator>().SetBool("isSilver", false);
-                coin.GetComponent<Animator>().SetBool("isGold", true);
+                coin.GetComponent<Animator>().SetInteger("type", CoinType.GOLD);
             }
-
         }
     }
 
@@ -155,5 +148,12 @@ public class SceneController : MonoBehaviour {
                 GameOver(player);
             }
         }
+    }
+
+    public static class CoinType
+    {
+        public const int GOLD = 0;
+        public const int SILVER = 1;
+        public const int BRONZE = 2;
     }
 }

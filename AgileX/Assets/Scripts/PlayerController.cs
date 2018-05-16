@@ -251,13 +251,16 @@ public class PlayerController : MonoBehaviour {
         {
             case "CoinBronze":
                 Points += 5;
+                Debug.Log("CoinBronze");
                 collision.gameObject.SetActive(false);
                 break;
             case "CoinSilver":
+                Debug.Log("CoinSilver");
                 Points += 10;
                 collision.gameObject.SetActive(false);
                 break;
             case "CoinGold":
+                Debug.Log("CoinGold");
                 Points += 15;
                 collision.gameObject.SetActive(false);
                 break;
