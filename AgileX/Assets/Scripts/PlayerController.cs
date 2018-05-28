@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour {
 
     private Slider energySlider;
     private float energy;
+    private float stoppedTime;
 
     Animator anim;
     Rigidbody2D rb;
@@ -86,7 +87,6 @@ public class PlayerController : MonoBehaviour {
         {
             if (value <= 0)
             {
-                scene.GameOver(this);
                 energy = 0;
             }
             else
@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour {
     void Awake()
     {
         scene = sceneObject.GetComponent<SceneController>();
+        stoppedTime = 0;
     }
 
     // Use this for initialization
@@ -148,7 +149,7 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        move = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+        move = Energy == 0 ? Vector2.zero : new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
 
         var random = UnityEngine.Random.Range(0, 500);
 
@@ -202,9 +203,16 @@ public class PlayerController : MonoBehaviour {
             anim.SetFloat("MoveX", move.x);
             anim.SetFloat("MoveY", move.y);
             anim.SetBool("isMoving", true);
+            stoppedTime = 0;
         }else
         {
             anim.SetBool("isMoving", false);
+            stoppedTime += Time.deltaTime;
+            if (stoppedTime > 3)
+            {
+                Energy += 10;
+                stoppedTime %= 3;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.X))
