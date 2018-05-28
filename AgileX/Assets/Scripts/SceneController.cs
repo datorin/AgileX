@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour {
@@ -26,6 +27,11 @@ public class SceneController : MonoBehaviour {
     private GameObject endTextObject;
     private System.TimeSpan countdown;
     private bool gamePaused = false;
+
+    public GameObject grid1;
+    public GameObject grid2;
+    public GameObject grid3;
+    public GameObject actualGrid;
 
     public double Countdown
     {
@@ -59,6 +65,8 @@ public class SceneController : MonoBehaviour {
 
         treeSpawners = GameObject.FindGameObjectsWithTag("TreeSpawner");
         InvokeRepeating("SpawnTrees", 2.0f, secondsBetweenRounds);
+
+        actualGrid = grid1;
 
     }
 
@@ -129,9 +137,28 @@ public class SceneController : MonoBehaviour {
     {
         endTextObject.SetActive(true);
         var endText = endTextObject.GetComponent<Text>();
-        endText.text = player.Points < pointsToWin ? "Game Over :(" : "You Win! :D";
-        endText.enabled = true;
-        Destroy(player.gameObject);
+        if (player.Points >= pointsToWin)
+        {
+            if (SceneManager.GetActiveScene().name == "Main")
+            {
+                SceneManager.LoadScene("Main 1", LoadSceneMode.Single);
+            }else if (SceneManager.GetActiveScene().name == "Main 1")
+            {
+                SceneManager.LoadScene("Main 2", LoadSceneMode.Single);
+            }
+            else
+            {
+                Destroy(player.gameObject);
+                endText.text = "You Win :)";
+                endText.enabled = true;
+            }
+        }
+        else
+        {
+            Destroy(player.gameObject);
+            endText.text = "Game Over :(";
+            endText.enabled = true;
+        }
     }
 
     // Update is called once per frame
