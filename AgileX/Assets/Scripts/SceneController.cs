@@ -25,6 +25,7 @@ public class SceneController : MonoBehaviour {
     private Text countDownText;
     private GameObject endTextObject;
     private System.TimeSpan countdown;
+    private bool gamePaused = false;
 
     public double Countdown
     {
@@ -58,6 +59,7 @@ public class SceneController : MonoBehaviour {
 
         treeSpawners = GameObject.FindGameObjectsWithTag("TreeSpawner");
         InvokeRepeating("SpawnTrees", 2.0f, secondsBetweenRounds);
+
     }
 
     void DisableAllCoins()
@@ -75,9 +77,10 @@ public class SceneController : MonoBehaviour {
     void ActivateCoins()
     {
         var coinsToActivate = coinObjects
-                .Where(coin => !coin.activeSelf)
+                .Where(coin => !coin.activeSelf && coin.GetComponent<CoinController>().Ready)
                 .OrderBy(coin => Random.Range(0, 1))
-                .Take(coinsEachRound);
+                .Take(coinsEachRound).ToList();
+
         foreach (var coin in coinsToActivate)
         {
 
@@ -86,21 +89,18 @@ public class SceneController : MonoBehaviour {
             float silverBound = bronzeBound + (porcentageMonedas10 * 100);
             float goldBound = silverBound + (porcentageMonedas15 * 100);
 
-            coin.SetActive(true);
+            var controller = coin.GetComponent<CoinController>();
             if (1 <= random && random < bronzeBound)
             {
-                coin.tag = "CoinBronze";
-                coin.GetComponent<Animator>().SetInteger("type", CoinType.BRONZE);
+                controller.EnableAs(CoinController.CoinType.BRONZE);
             }
             else if (bronzeBound <= random && random < silverBound)
             {
-                coin.tag = "CoinSilver";
-                coin.GetComponent<Animator>().SetInteger("type", CoinType.SILVER);
+                controller.EnableAs(CoinController.CoinType.SILVER);
             }
             else if (silverBound <= random && random <= goldBound)
             {
-                coin.tag = "CoinGold";
-                coin.GetComponent<Animator>().SetInteger("type", CoinType.GOLD);
+                controller.EnableAs(CoinController.CoinType.GOLD);
             }
         }
     }
@@ -139,8 +139,7 @@ public class SceneController : MonoBehaviour {
         if (Countdown > 0)
         {
             Countdown -= Time.deltaTime;
-        }
-        else if (!endTextObject.activeSelf)
+        }else if (!endTextObject.activeSelf)
         {
             var players = GameObject.FindGameObjectsWithTag("Player").Select(player => player.GetComponent<PlayerController>());
             foreach (PlayerController player in players)
@@ -148,12 +147,34 @@ public class SceneController : MonoBehaviour {
                 GameOver(player);
             }
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (gamePaused)
+            {
+                resumeGame();
+            }else
+            {
+                pauseGame();
+            }
+        }
+    }
+    private void pauseGame()
+    {
+        endTextObject.SetActive(true);
+        gamePaused = true;
+        Time.timeScale = 0;
+        var endText = endTextObject.GetComponent<Text>();
+        endText.alignment = TextAnchor.MiddleCenter;
+        endText.text = "PAUSE";
+        endText.enabled = true;
     }
 
-    public static class CoinType
+    public void resumeGame()
     {
-        public const int GOLD = 0;
-        public const int SILVER = 1;
-        public const int BRONZE = 2;
+        endTextObject.SetActive(false);
+        gamePaused = false;
+        Time.timeScale = 1;
+        var endText = endTextObject.GetComponent<Text>();
+        endText.enabled = false;
     }
 }

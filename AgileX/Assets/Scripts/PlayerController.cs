@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour {
     public int maxDamage = 100;
     public int minDamage = 0;
 
+
+    [SerializeField] private float secondsBetweenRounds = 5.0f;
+
     private Text pointsText;
     private int points;
 
@@ -27,6 +30,7 @@ public class PlayerController : MonoBehaviour {
 
     private Slider energySlider;
     private float energy;
+    private float stoppedTime;
 
     Animator anim;
     Rigidbody2D rb;
@@ -86,7 +90,6 @@ public class PlayerController : MonoBehaviour {
         {
             if (value <= 0)
             {
-                scene.GameOver(this);
                 energy = 0;
             }
             else
@@ -124,6 +127,7 @@ public class PlayerController : MonoBehaviour {
     void Awake()
     {
         scene = sceneObject.GetComponent<SceneController>();
+        stoppedTime = 0;
     }
 
     // Use this for initialization
@@ -135,6 +139,7 @@ public class PlayerController : MonoBehaviour {
         damageSlider = GameObject.Find("DamageSlider").GetComponent<Slider>();
         damageSlider.maxValue = maxDamage;
         damageSlider.minValue = 0;
+
 
         Points = scene.initialPoints;
         Energy = maxEnergy;
@@ -148,27 +153,10 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        move = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+        move = Energy == 0 ? Vector2.zero : new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
 
-        var random = UnityEngine.Random.Range(0, 500);
-
-        if(random == 4)
-        {
-            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
-            Instantiate(heart, places[randomPlace].transform.position + new Vector3(1,0,0), Quaternion.identity);
-        }
-
-        if (random == 7)
-        {
-            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
-            Instantiate(energies, places[randomPlace].transform.position - new Vector3(1, 0, 0), Quaternion.identity);
-        }
-
-        if (random == 11)
-        {
-            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
-            Instantiate(projectiles, places[randomPlace].transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-        }
+        InvokeRepeating("spawnAwards", 2.0f, secondsBetweenRounds);
+        
 
         if (isHole)
         {
@@ -198,13 +186,23 @@ public class PlayerController : MonoBehaviour {
 
         if (move != Vector2.zero)
         {
-            direction = move.normalized;
-            anim.SetFloat("MoveX", move.x);
-            anim.SetFloat("MoveY", move.y);
-            anim.SetBool("isMoving", true);
+            if (Time.timeScale != 0)
+            {
+                direction = move.normalized;
+                anim.SetFloat("MoveX", move.x);
+                anim.SetFloat("MoveY", move.y);
+                anim.SetBool("isMoving", true);
+            }
+            
         }else
         {
             anim.SetBool("isMoving", false);
+            stoppedTime += Time.deltaTime;
+            if (stoppedTime > 3)
+            {
+                Energy += 10;
+                stoppedTime %= 3;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.X))
@@ -223,6 +221,28 @@ public class PlayerController : MonoBehaviour {
             StartCoroutine(waitInvulnerable(1));
         }
 	}
+    void spawnAwards()
+    {
+        var random = UnityEngine.Random.Range(0, 500);
+
+        if (random == 4)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(heart, places[randomPlace].transform.position + new Vector3(1, 0, 0), Quaternion.identity);
+        }
+
+        if (random == 7)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(energies, places[randomPlace].transform.position - new Vector3(1, 0, 0), Quaternion.identity);
+        }
+
+        if (random == 11)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(projectiles, places[randomPlace].transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+        }
+    }
 
     void FixedUpdate()
     {
@@ -246,24 +266,15 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        var coinController = collision.gameObject.GetComponent<CoinController>();
+        if (coinController != null)
+        {
+            coinController.Disable(this);
+        }
+
         string collisionTag = collision.gameObject.tag;
         switch(collisionTag)
         {
-            case "CoinBronze":
-                Points += 5;
-                Debug.Log("CoinBronze");
-                collision.gameObject.SetActive(false);
-                break;
-            case "CoinSilver":
-                Debug.Log("CoinSilver");
-                Points += 10;
-                collision.gameObject.SetActive(false);
-                break;
-            case "CoinGold":
-                Debug.Log("CoinGold");
-                Points += 15;
-                collision.gameObject.SetActive(false);
-                break;
             case "Hole":
                 if (!invulnerable)
                 {
