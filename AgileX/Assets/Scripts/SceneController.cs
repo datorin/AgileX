@@ -25,6 +25,7 @@ public class SceneController : MonoBehaviour {
     private Text countDownText;
     private GameObject endTextObject;
     private System.TimeSpan countdown;
+    private bool gamePaused = false;
 
     public double Countdown
     {
@@ -58,6 +59,7 @@ public class SceneController : MonoBehaviour {
 
         treeSpawners = GameObject.FindGameObjectsWithTag("TreeSpawner");
         InvokeRepeating("SpawnTrees", 2.0f, secondsBetweenRounds);
+
     }
 
     void DisableAllCoins()
@@ -137,13 +139,22 @@ public class SceneController : MonoBehaviour {
         if (Countdown > 0)
         {
             Countdown -= Time.deltaTime;
-        }
-        else if (!endTextObject.activeSelf)
+        }else if (!endTextObject.activeSelf)
         {
             var players = GameObject.FindGameObjectsWithTag("Player").Select(player => player.GetComponent<PlayerController>());
             foreach (PlayerController player in players)
             {
                 GameOver(player);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (gamePaused)
+            {
+                resumeGame();
+            }else
+            {
+                pauseGame();
             }
         }
     }

@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour {
     public int maxDamage = 100;
     public int minDamage = 0;
 
+
+    [SerializeField] private float secondsBetweenRounds = 5.0f;
+
     private Text pointsText;
     private int points;
 
@@ -137,6 +140,7 @@ public class PlayerController : MonoBehaviour {
         damageSlider.maxValue = maxDamage;
         damageSlider.minValue = 0;
 
+
         Points = scene.initialPoints;
         Energy = maxEnergy;
         Damage =  minDamage;
@@ -151,25 +155,8 @@ public class PlayerController : MonoBehaviour {
 
         move = Energy == 0 ? Vector2.zero : new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
 
-        var random = UnityEngine.Random.Range(0, 500);
-
-        if(random == 4)
-        {
-            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
-            Instantiate(heart, places[randomPlace].transform.position + new Vector3(1,0,0), Quaternion.identity);
-        }
-
-        if (random == 7)
-        {
-            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
-            Instantiate(energies, places[randomPlace].transform.position - new Vector3(1, 0, 0), Quaternion.identity);
-        }
-
-        if (random == 11)
-        {
-            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
-            Instantiate(projectiles, places[randomPlace].transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-        }
+        InvokeRepeating("spawnAwards", 2.0f, secondsBetweenRounds);
+        
 
         if (isHole)
         {
@@ -199,11 +186,14 @@ public class PlayerController : MonoBehaviour {
 
         if (move != Vector2.zero)
         {
-            direction = move.normalized;
-            anim.SetFloat("MoveX", move.x);
-            anim.SetFloat("MoveY", move.y);
-            anim.SetBool("isMoving", true);
-            stoppedTime = 0;
+            if (Time.timeScale != 0)
+            {
+                direction = move.normalized;
+                anim.SetFloat("MoveX", move.x);
+                anim.SetFloat("MoveY", move.y);
+                anim.SetBool("isMoving", true);
+            }
+            
         }else
         {
             anim.SetBool("isMoving", false);
@@ -231,6 +221,28 @@ public class PlayerController : MonoBehaviour {
             StartCoroutine(waitInvulnerable(1));
         }
 	}
+    void spawnAwards()
+    {
+        var random = UnityEngine.Random.Range(0, 500);
+
+        if (random == 4)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(heart, places[randomPlace].transform.position + new Vector3(1, 0, 0), Quaternion.identity);
+        }
+
+        if (random == 7)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(energies, places[randomPlace].transform.position - new Vector3(1, 0, 0), Quaternion.identity);
+        }
+
+        if (random == 11)
+        {
+            var randomPlace = UnityEngine.Random.Range(0, places.Count - 1);
+            Instantiate(projectiles, places[randomPlace].transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+        }
+    }
 
     void FixedUpdate()
     {
