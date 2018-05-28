@@ -158,4 +158,23 @@ public class SceneController : MonoBehaviour {
             }
         }
     }
+    private void pauseGame()
+    {
+        endTextObject.SetActive(true);
+        gamePaused = true;
+        Time.timeScale = 0;
+        var endText = endTextObject.GetComponent<Text>();
+        endText.alignment = TextAnchor.MiddleCenter;
+        endText.text = "PAUSE";
+        endText.enabled = true;
+    }
+
+    public void resumeGame()
+    {
+        endTextObject.SetActive(false);
+        gamePaused = false;
+        Time.timeScale = 1;
+        var endText = endTextObject.GetComponent<Text>();
+        endText.enabled = false;
+    }
 }
