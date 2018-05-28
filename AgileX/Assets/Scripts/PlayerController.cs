@@ -246,24 +246,15 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        var coinController = collision.gameObject.GetComponent<CoinController>();
+        if (coinController != null)
+        {
+            coinController.Disable(this);
+        }
+
         string collisionTag = collision.gameObject.tag;
         switch(collisionTag)
         {
-            case "CoinBronze":
-                Points += 5;
-                Debug.Log("CoinBronze");
-                collision.gameObject.SetActive(false);
-                break;
-            case "CoinSilver":
-                Debug.Log("CoinSilver");
-                Points += 10;
-                collision.gameObject.SetActive(false);
-                break;
-            case "CoinGold":
-                Debug.Log("CoinGold");
-                Points += 15;
-                collision.gameObject.SetActive(false);
-                break;
             case "Hole":
                 if (!invulnerable)
                 {

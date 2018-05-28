@@ -75,9 +75,10 @@ public class SceneController : MonoBehaviour {
     void ActivateCoins()
     {
         var coinsToActivate = coinObjects
-                .Where(coin => !coin.activeSelf)
+                .Where(coin => !coin.activeSelf && coin.GetComponent<CoinController>().Ready)
                 .OrderBy(coin => Random.Range(0, 1))
-                .Take(coinsEachRound);
+                .Take(coinsEachRound).ToList();
+
         foreach (var coin in coinsToActivate)
         {
 
@@ -86,21 +87,18 @@ public class SceneController : MonoBehaviour {
             float silverBound = bronzeBound + (porcentageMonedas10 * 100);
             float goldBound = silverBound + (porcentageMonedas15 * 100);
 
-            coin.SetActive(true);
+            var controller = coin.GetComponent<CoinController>();
             if (1 <= random && random < bronzeBound)
             {
-                coin.tag = "CoinBronze";
-                coin.GetComponent<Animator>().SetInteger("type", CoinType.BRONZE);
+                controller.EnableAs(CoinController.CoinType.BRONZE);
             }
             else if (bronzeBound <= random && random < silverBound)
             {
-                coin.tag = "CoinSilver";
-                coin.GetComponent<Animator>().SetInteger("type", CoinType.SILVER);
+                controller.EnableAs(CoinController.CoinType.SILVER);
             }
             else if (silverBound <= random && random <= goldBound)
             {
-                coin.tag = "CoinGold";
-                coin.GetComponent<Animator>().SetInteger("type", CoinType.GOLD);
+                controller.EnableAs(CoinController.CoinType.GOLD);
             }
         }
     }
@@ -148,12 +146,5 @@ public class SceneController : MonoBehaviour {
                 GameOver(player);
             }
         }
-    }
-
-    public static class CoinType
-    {
-        public const int GOLD = 0;
-        public const int SILVER = 1;
-        public const int BRONZE = 2;
     }
 }
