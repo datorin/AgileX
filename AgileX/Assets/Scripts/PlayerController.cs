@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour {
     public static bool isFire = false;
     public static bool isCollision = false;
 
+    public AudioClip MusicClip1;
+
+    public AudioSource MusicSource1;
+
     [SerializeField] private GameObject sceneObject;
     private SceneController scene;
 
@@ -140,6 +144,7 @@ public class PlayerController : MonoBehaviour {
         damageSlider = GameObject.Find("DamageSlider").GetComponent<Slider>();
         damageSlider.maxValue = maxDamage;
         damageSlider.minValue = 0;
+        MusicSource1.clip = MusicClip1;
 
 
         Points = scene.initialPoints;
@@ -283,6 +288,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     Points -= 10;
                     isHole = true;
+                    MusicSource1.Play();
                     holePos = collision.gameObject.transform.position + new Vector3(-1.5f,-0.5f,0);
                 }
                 invulnerable = true;
@@ -291,6 +297,7 @@ public class PlayerController : MonoBehaviour {
                 if (!invulnerable)
                 {
                     Points -= 10;
+                    MusicSource1.Play();
                     isFire = true;
                 }
                 invulnerable = true;
@@ -298,6 +305,7 @@ public class PlayerController : MonoBehaviour {
             case "Collision":
                 if (!invulnerable)
                 {
+                    MusicSource1.Play();
                     isCollision = true;
                 }
                 break;
