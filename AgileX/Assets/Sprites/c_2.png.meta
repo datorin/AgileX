@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: c40009a6be0d4614a95598970cdd8cd1
-timeCreated: 1526330377
+guid: 693ad929306e1b444a6c09bbadd134d9
+timeCreated: 1527558670
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -17,21 +17,18 @@ TextureImporter:
     21300020: c_2_11
     21300022: c_2_12
     21300024: c_2_13
-    21300026: c_2_14
-    21300028: c_2_19
-    21300030: c_2_20
-    21300032: c_2_21
-    21300034: c_2_22
-    21300036: c_2_23
-    21300038: c_2_24
-    21300040: c_2_25
-    21300042: c_2_27
-    21300044: c_2_28
-    21300046: c_2_29
-    21300048: c_2_30
-    21300050: c_2_31
-    21300052: c_2_32
-    21300054: c_2_33
+    21300026: c_2_19
+    21300028: c_2_20
+    21300030: c_2_21
+    21300032: c_2_22
+    21300034: c_2_23
+    21300036: c_2_24
+    21300038: c_2_27
+    21300040: c_2_28
+    21300042: c_2_29
+    21300044: c_2_30
+    21300046: c_2_31
+    21300048: c_2_32
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -204,7 +201,7 @@ TextureImporter:
         serializedVersion: 2
         x: 97
         y: 228
-        width: 31
+        width: 15
         height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -311,26 +308,12 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: c_2_14
-      rect:
-        serializedVersion: 2
-        x: 114
-        y: 196
-        width: 13
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
       name: c_2_19
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 164
-        width: 15
+        width: 14
         height: 23
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -384,9 +367,9 @@ TextureImporter:
       name: c_2_23
       rect:
         serializedVersion: 2
-        x: 80
+        x: 81
         y: 164
-        width: 15
+        width: 14
         height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -398,23 +381,9 @@ TextureImporter:
       name: c_2_24
       rect:
         serializedVersion: 2
-        x: 96
+        x: 97
         y: 164
-        width: 15
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: c_2_25
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 164
-        width: 16
+        width: 14
         height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -497,20 +466,6 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 97
-        y: 132
-        width: 13
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: c_2_33
-      rect:
-        serializedVersion: 2
-        x: 114
         y: 132
         width: 13
         height: 22

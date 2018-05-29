@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
     [SerializeField] public int amunition = 5;
+
+    public bool atras;
+    public bool triple;
 
     public Text amunitionText;
 
@@ -203,6 +207,21 @@ public class PlayerController : MonoBehaviour {
             {
                 GameObject projectileClone = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
                 projectileClone.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+                
+                if (atras)
+                {
+                    GameObject projectileClone2 = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
+                    projectileClone2.GetComponent<Rigidbody2D>().AddForce(-direction * force, ForceMode2D.Impulse);
+                }
+                
+                if(triple)
+                {
+                    GameObject projectileClone3 = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
+                    projectileClone3.GetComponent<Rigidbody2D>().AddForce(AddAngleToDirection(direction, -15) * force, ForceMode2D.Impulse);
+                    
+                    GameObject projectileClone4 = (GameObject)Instantiate(projectile, belt.position, Quaternion.identity);
+                    projectileClone4.GetComponent<Rigidbody2D>().AddForce(AddAngleToDirection(direction, +15) * force, ForceMode2D.Impulse);
+                }
                 amunition = amunition - 1;
                 amunitionText.text = ""+amunition;
             }
@@ -290,5 +309,16 @@ public class PlayerController : MonoBehaviour {
                 Destroy(collision.gameObject);
                 break;
         }
+    }
+    
+    public static Vector2 AddAngleToDirection(Vector2 direction, float angle) 
+    { 
+        float sin = Mathf.Sin(angle * Mathf.Deg2Rad); 
+        float cos = Mathf.Cos(angle * Mathf.Deg2Rad); 
+ 
+        direction.x = (cos * direction.x) - (sin * direction.y); 
+        direction.y = (sin * direction.x) + (cos * direction.y); 
+ 
+        return direction; 
     }
 }
