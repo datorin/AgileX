@@ -5516,7 +5516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPoints: 25
-  pointsToWin: 70
+  pointsToWin: 125
   totalSeconds: 60
   coinsEachRound: 2
   batsEachRound: 1

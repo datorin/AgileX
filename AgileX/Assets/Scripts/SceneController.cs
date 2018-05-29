@@ -163,6 +163,12 @@ public class SceneController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        }
+
         if (Countdown > 0)
         {
             Countdown -= Time.deltaTime;
