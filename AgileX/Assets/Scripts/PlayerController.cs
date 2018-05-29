@@ -154,6 +154,12 @@ public class PlayerController : MonoBehaviour {
         if (SceneManager.GetActiveScene().name == "Main 1")
         {
             anim.SetBool("isBlue", true);
+            atras = true;
+        }else if (SceneManager.GetActiveScene().name == "Main 2")
+        {
+            anim.SetBool("isLast", true);
+            triple = true;
+            atras = true;
         }
 	}
 	
