@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -148,6 +149,12 @@ public class PlayerController : MonoBehaviour {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         belt = this.gameObject.transform.GetChild(0);
+        
+        
+        if (SceneManager.GetActiveScene().name == "Main 1")
+        {
+            anim.SetBool("isBlue", true);
+        }
 	}
 	
 	// Update is called once per frame
