@@ -5,12 +5,13 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PlayerController : MonoBehaviour {
 
-    private bool isHole = false;
-    private bool isFalling = false;
-    private bool isFire = false;
-    private bool isCollision = false;
+    public static bool isHole = false;
+    public static bool isFalling = false;
+    public static bool isFire = false;
+    public static bool isCollision = false;
 
     [SerializeField] private GameObject sceneObject;
     private SceneController scene;
@@ -43,7 +44,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] GameObject projectile;
     [SerializeField] float speed = 5;
     [SerializeField] float force = 20;
-    [SerializeField] public int amunition = 5;
+    [SerializeField] public static int amunition = 5;
 
     public bool atras;
     public bool triple;
